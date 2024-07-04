@@ -1,0 +1,4 @@
+#!/bin/bash
+cd game
+zip -9 -r ../LuaBubblesGame.love .
+adb push ../LuaBubblesGame.love /storage/emulated/0/Documents/LoveGameTest/LuaBubblesGame.love
