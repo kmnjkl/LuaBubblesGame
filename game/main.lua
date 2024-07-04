@@ -1,28 +1,24 @@
-local Object = require("lib/classic")
-local MainScreen = require("src/screens/MainScreen")
-local GameScreen = require("src/screens/GameScreen")
-local SettingsScreen = require("src/screens/SettingsScreen")
+local Object          = require("lib/classic")
+local MainScreen      = require("src/screens/MainScreen")
+local GameScreen      = require("src/screens/GameScreen")
+local SettingsScreen  = require("src/screens/SettingsScreen")
+local settings        = require("src/settings")
+
+G_graphicsTools = require("src/tools/graphics_tools")
 
 local currentScreen
 
 function love.load()
   love.graphics.setNewFont("assets/fonts/NotoSans-Regular.ttf", 20)
 
-  currentScreen = MainScreen(nil)
+  currentScreen = MainScreen({settings=settings})
+  currentScreen:display()
 end
 
 function love.resize(w, h)
-  currentScreen.resize(w, h)
-end
-
-function love.keypressed(key)
-  currentScreen.keypressed(key)
+  currentScreen:resize(w, h)
 end
 
 function love.draw()
-  local w = love.graphics.getWidth()
-  local h = love.graphics.getHeight()
-  local keyp = "key"
-  love.graphics.print("Ура! " .. w .. " " .. h .. " " .. keyp)
-  love.graphics.circle("fill", w/2, h/2, w/5)
+  currentScreen:draw()
 end

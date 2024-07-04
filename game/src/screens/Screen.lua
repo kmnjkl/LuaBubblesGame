@@ -1,10 +1,17 @@
 local Object = require("lib/classic")
 local Screen = Object:extend()
 
-function Screen:new(previousScreen)
-  self.previousScreen = previousScreen
-  self.windowWidth, self.windowHeight = love.graphics.getWidth(), love.graphics.getHeight()
+function Screen:display()
+  love.graphics.setBackgroundColor(self.settings.colors.backgroundColor)
+end
 
+function Screen:open(previousScreen)
+  self.previousScreen = previousScreen
+  self.settings = previousScreen.settings
+  self.windowWidth, self.windowHeight = love.graphics.getWidth(), love.graphics.getHeight()
+end
+
+function Screen:new(previousScreen)
   self.drawCallbacks = {}
 
   self.updateCallbacks = {}
@@ -15,6 +22,11 @@ function Screen:new(previousScreen)
   self.touchpressedCallbacks = {}
   self.touchreleasedCallbacks = {}
   self.touchmovedCallbacks = {}
+
+  self.previousScreen = previousScreen
+  self.settings = previousScreen.settings
+
+  self.windowWidth, self.windowHeight = love.graphics.getWidth(), love.graphics.getHeight()
 end
 
 function Screen:resize(w, h)
@@ -83,6 +95,22 @@ function Screen:touchmoved(id, x, y, dx, dy, pressure)
   do
     func(data)
   end
+end
+
+--- Add an object to draw on the Screen.
+--- @param drawCallback function
+--- @return number i the index of a callback in Screen.drawCallbacks.
+function Screen:addDrawing(drawCallback)
+  table.insert(self.drawCallbacks, drawCallback)
+  return #(self.drawCallbacks)
+end
+
+function Screen:getWindowWidth()
+  return self.windowWidth
+end
+
+function Screen:getWindowHeight()
+  return self.windowHeight
 end
 
 return Screen
