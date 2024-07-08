@@ -12,16 +12,16 @@ function Screen:open(previousScreen)
 end
 
 function Screen:new(previousScreen)
-  self.drawCallbacks = {}
+  self.drawings = {}
 
-  self.updateCallbacks = {}
+  self.updateListeners = {}
 
-  self.keypressedCallbacks = {}
-  self.keyreleasedCallbacks = {}
+  self.keyoressedListeners = {}
+  self.keyreleasedListeners = {}
 
-  self.touchpressedCallbacks = {}
-  self.touchreleasedCallbacks = {}
-  self.touchmovedCallbacks = {}
+  self.touchpressedListeners = {}
+  self.touchreleasedListeners = {}
+  self.touchmovedListeners = {}
 
   self.previousScreen = previousScreen
   self.settings = previousScreen.settings
@@ -37,72 +37,72 @@ end
 function Screen:draw()
   -- Draw
   local data = {screen=self}
-  for i, func in pairs(self.drawCallbacks)
+  for i, v in pairs(self.drawings)
   do
-    func(data)
+    v.draw(data)
   end
 end
 
 function Screen:update(dt)
   -- Update
   local data = {screen=self, dt=dt}
-  for i, func in pairs(self.updateCallbacks)
+  for i, v in pairs(self.updateListeners)
   do
-    func(data)
+    v.update(data)
   end
 end
 
 function Screen:keypressed(key, scancode, isrepeat)
   -- Key pressed
   local data = {screen=self, key=key}
-  for i, func in pairs(self.keypressedCallbacks)
+  for i, v in pairs(self.keyoressedListeners)
   do
-    func(data)
+    v.keypressed(data)
   end
 end
 
 function Screen:keyreleased(key, scancode)
   -- Key released
   local data = {screen=self, key=key}
-  for i, func in pairs(self.keyreleasedCallbacks)
+  for i, v in pairs(self.keyreleasedListeners)
   do
-    func(data)
+    v.keyreleased(data)
   end
 end
 
 function Screen:touchpressed(id, x, y, dx, dy, pressure)
   -- Touch pressed
   local data = {screen=self, id=id, x=x, y=y, dx=dx, dy=dy, pressure=pressure}
-  for i, func in pairs(self.touchpressedCallbacks)
+  for i, v in pairs(self.touchpressedListeners)
   do
-    func(data)
+    v.touchpressed(data)
   end
 end
 
 function Screen:touchreleased(id, x, y, dx, dy, pressure)
   -- Touch released
   local data = {screen=self, id=id, x=x, y=y, dx=dx, dy=dy, pressure=pressure}
-  for i, func in pairs(self.touchreleasedCallbacks)
+  for i, v in pairs(self.touchreleasedListeners)
   do
-    func(data)
+    v.touchreleased(data)
   end
 end
 
 function Screen:touchmoved(id, x, y, dx, dy, pressure)
   -- Touch moved
   local data = {screen=self, id=id, x=x, y=y, dx=dx, dy=dy, pressure=pressure}
-  for i, func in pairs(self.touchmovedCallbacks)
+  for i, v in pairs(self.touchmovedListeners)
   do
-    func(data)
+    v.touchmoved(data)
   end
 end
 
---- Add an object to draw on the Screen.
---- @param drawCallback function
---- @return number i the index of a callback in Screen.drawCallbacks.
-function Screen:addDrawing(drawCallback)
-  table.insert(self.drawCallbacks, drawCallback)
-  return #(self.drawCallbacks)
+---Add a drawing to the screen
+---@param d table
+---@return integer - index of the drawing in Screen.drawings
+function Screen:addDrawing(d)
+  table.insert(self.drawings, d)
+  return #(self.drawings)
 end
 
 function Screen:getWindowWidth()

@@ -32,4 +32,27 @@ function graphicsTools.drawCenteredText(coloredtext, font, x, y, r, sx, sy, ox, 
   love.graphics.print(coloredtext, font, x, y, r, sx, sy, ox+textWidth/2, oy+textHeight/2, kx, ky)
 end
 
+function graphicsTools.getTextWidth(coloredtext, font)
+  local plainText = ""
+  if type(coloredtext) == "table" then
+    for index, value in ipairs(coloredtext) do
+      if index%2 == 0 then
+        plainText = plainText .. value
+      end
+    end
+  else
+    plainText = coloredtext
+  end
+  local textWidth = font:getWidth(plainText)
+  local textHeight = font:getHeight()
+
+  return textWidth
+end
+
+function graphicsTools.getTextHeight(coloredtext, font)
+   local textHeight = font:getHeight()
+
+  return textHeight
+end
+
 return graphicsTools
